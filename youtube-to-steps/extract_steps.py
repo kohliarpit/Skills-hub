@@ -16,7 +16,10 @@ from google import genai
 from google.genai import types
 from google.genai.errors import ClientError
 
-API_KEY = "AIzaSyA_AN5-LL9LCDQ9sCnaZVcSNW_53qiM_GI"
+API_KEY = os.environ.get("GEMINI_API_KEY")
+if not API_KEY:
+    print("Error: GEMINI_API_KEY environment variable not set", file=sys.stderr)
+    sys.exit(1)
 MODEL = "models/gemini-2.5-flash"
 FIXED_PROMPT_PATH = "prompts/gemini_prompt.txt"
 AUTO_PROMPT_PATH = "prompts/gemini_auto_prompt.txt"
