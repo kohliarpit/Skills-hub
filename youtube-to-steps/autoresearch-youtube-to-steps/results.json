@@ -1,0 +1,48 @@
+{
+  "skill_name": "youtube-to-steps",
+  "status": "running",
+  "current_experiment": 3,
+  "baseline_score": 9,
+  "best_score": 9,
+  "experiments": [
+    {
+      "id": 0,
+      "score": 18,
+      "max_score": 20,
+      "pass_rate": 90.0,
+      "status": "baseline",
+      "description": "session 1 baseline — original gemini_auto_prompt.txt (4 evals, 5 URLs)"
+    },
+    {
+      "id": 1,
+      "score": 19,
+      "max_score": 20,
+      "pass_rate": 95.0,
+      "status": "keep",
+      "description": "session 1 — anti-adverb verb title rule"
+    },
+    {
+      "id": 2,
+      "score": 20,
+      "max_score": 20,
+      "pass_rate": 100.0,
+      "status": "keep",
+      "description": "session 1 — logical execution order rule (setup before demos)"
+    },
+    {
+      "id": 3,
+      "score": 9,
+      "max_score": 10,
+      "pass_rate": 90.0,
+      "status": "baseline",
+      "description": "session 2 baseline — 5 evals (added summary eval), 2 new URLs"
+    }
+  ],
+  "eval_breakdown": [
+    {"name": "Logical order", "pass_count": 2, "total": 2},
+    {"name": "Titles start with bare verb", "pass_count": 2, "total": 2},
+    {"name": "Step count 3-15 appropriate", "pass_count": 2, "total": 2},
+    {"name": "Self-contained (no cross-refs)", "pass_count": 1, "total": 2},
+    {"name": "Summary present (2-4 sentences)", "pass_count": 2, "total": 2}
+  ]
+}

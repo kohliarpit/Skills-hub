@@ -1,0 +1,17 @@
+Watch this video carefully from start to finish.
+
+Extract exactly {N} sequential, actionable steps that a viewer must follow to replicate what is shown or taught in the video.
+
+Rules:
+- Steps must be in chronological order as they appear in the video
+- Each step must be self-contained and actionable (starts with a verb)
+- Include any code snippets, commands, or configurations shown verbatim
+- If the video has fewer distinct actions than {N}, split complex steps into sub-actions
+- If the video has more actions than {N}, merge related steps into one
+
+Return ONLY a valid JSON array with no preamble, no markdown fences, no explanation:
+[
+  {"step": 1, "title": "Short title", "detail": "Full actionable description. Include any code blocks using triple backticks."},
+  {"step": 2, "title": "Short title", "detail": "..."},
+  ...
+]

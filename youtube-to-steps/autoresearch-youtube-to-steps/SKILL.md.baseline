@@ -1,0 +1,110 @@
+---
+name: youtube-to-steps
+description: >
+  Activate when the user provides a YouTube URL and wants it converted into
+  actionable steps. Triggers on: "/youtube-to-steps <url>", "/youtube-to-steps <url> <N>",
+  "turn this video into steps", "summarize youtube video as steps",
+  "extract steps from this video", or any YouTube URL accompanied by "steps"
+  or "how to follow". N is optional — skill auto-determines step count if omitted.
+---
+
+# youtube-to-steps — Orchestration Instructions
+
+Claude orchestrates three agents: Gemini (video extraction) → Claude (formatting
+& validation) → Codex (code review). Output is always saved to a markdown file.
+
+---
+
+## Step 1 — Parse input
+
+Extract from the user's message:
+- `YOUTUBE_URL`: the full YouTube URL (must start with `https://www.youtube.com/` or `https://youtu.be/`)
+- `N`: the number of steps requested (integer). **Optional** — if not provided, Gemini will auto-determine the appropriate count based on video length and complexity. Do NOT ask the user for N.
+
+Derive a short `VIDEO_SLUG` from the URL for the output filename:
+- For `?v=<id>` URLs: use the video ID
+- For `youtu.be/<id>` URLs: use the ID
+
+Output file path: `~/documents/youtube-steps/<VIDEO_SLUG>-steps.md`
+
+---
+
+## Step 2 — Run Gemini extraction
+
+Run the extraction script from the skill directory:
+
+```bash
+# With auto N (recommended when user didn't specify):
+cd ~/.claude/skills/youtube-to-steps && python3 extract_steps.py "<YOUTUBE_URL>"
+
+# With explicit N:
+cd ~/.claude/skills/youtube-to-steps && python3 extract_steps.py "<YOUTUBE_URL>" <N>
+```
+
+- If the script exits with a non-zero code, show the stderr output and stop.
+- Parse the JSON array from stdout. Each item has: `step`, `title`, `detail`.
+
+---
+
+## Step 3 — Validate and format steps (Claude)
+
+Review the steps:
+1. Confirm exactly N steps exist. If not, merge or split steps to reach N.
+2. Ensure each step title starts with an action verb.
+3. Ensure each detail is self-contained (no references like "as above" or "see step 2").
+4. Preserve all code blocks verbatim.
+
+Format as markdown:
+
+```markdown
+# Steps: <video title or URL>
+**Source:** <YOUTUBE_URL>
+**Steps:** <N>
+
+---
+
+## Step 1: <title>
+<detail>
+
+## Step 2: <title>
+<detail>
+
+...
+```
+
+Hold this markdown in context — do NOT show it yet.
+
+---
+
+## Step 4 — Always run Codex code review
+
+Always run Codex regardless of whether steps contain code:
+
+```bash
+codex exec "Review these instructional steps for accuracy, completeness, and any code correctness issues. Flag anything misleading or technically incorrect. Be concise.\n\n<paste full markdown steps here>"
+```
+
+Parse Codex output. Append to the markdown as:
+
+```markdown
+---
+
+## Code Review (Codex)
+<codex output verbatim>
+```
+
+If Codex errors or times out, note it: `> Codex review unavailable: <error>`
+
+---
+
+## Step 5 — Save to file
+
+Write the complete markdown (steps + code review section) to:
+`~/documents/youtube-steps/<VIDEO_SLUG>-steps.md`
+
+Then tell the user:
+- File path
+- Number of steps extracted
+- Any warnings (step count mismatch, Codex error)
+
+Do NOT print the full step content to the terminal — just the summary.

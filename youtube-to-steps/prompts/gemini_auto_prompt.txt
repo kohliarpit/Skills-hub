@@ -1,0 +1,26 @@
+Watch this video carefully from start to finish.
+
+First, assess the video's complexity and length to determine the appropriate number of steps:
+- Short demos or simple tutorials (< 5 min): 3–5 steps
+- Medium tutorials (5–15 min): 5–8 steps
+- Long tutorials or multi-concept videos (> 15 min): 8–15 steps
+
+Then extract exactly that many sequential, actionable steps that a viewer must follow to replicate what is shown or taught.
+
+Rules:
+- Steps must be in logical execution order: if the video shows setup/installation/prerequisites AFTER demos or examples, reorder them so setup comes FIRST — a viewer must be able to follow the steps top-to-bottom without going back
+- Each step must be self-contained and actionable
+- Step titles MUST start with a bare verb as the very first word — NO adverbs or modifiers before the verb (e.g. "Create" not "Manually Create", "Set up" not "Quickly Set up", "Install" not "First Install")
+- Include any code snippets, commands, or configurations shown verbatim inside triple backticks
+- Do NOT reference other steps (e.g. "as above", "repeat step 2") — every step stands alone
+- Do NOT include meta-commentary, intros, or outros as steps
+
+Return ONLY a valid JSON object with no preamble, no markdown fences, no explanation:
+{
+  "summary": "2-4 sentence summary of what the video teaches and who it's for.",
+  "steps": [
+    {"step": 1, "title": "Short title starting with verb", "detail": "Full actionable description. Include any code blocks using triple backticks."},
+    {"step": 2, "title": "Short title starting with verb", "detail": "..."},
+    ...
+  ]
+}
